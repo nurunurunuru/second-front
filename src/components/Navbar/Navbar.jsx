@@ -6,13 +6,12 @@ import DarkMode from "./DarkMode";
 import { FaCartShopping } from "react-icons/fa6";
 import { MdHomeFilled } from "react-icons/md";
 import { HiOutlineDevicePhoneMobile } from "react-icons/hi2";
-import { FaLaptop, FaTv, FaBars } from "react-icons/fa";
+import { FaLaptop, FaBars } from "react-icons/fa";
 
 const Menu = [
   { id: 1, name: "Home", link: "/home" },
   { id: 2, name: "Mobile", link: "/mobile" },
   { id: 3, name: "Blog", link: "/blog" },
-  { id: 4, name: "Television", link: "/television" },
   { id: 5, name: "Dashboard", link: "/dashboard" },
 ];
 
@@ -29,13 +28,14 @@ const Navbar = ({ handleOrderPopup }) => {
   };
 
   return (
-    <nav className="shadow-lg bg-white dark:bg-gray-800 dark:text-white duration-200 relative z-40">
+    <nav className="shadow-lg bg-gradient-to-r from-white via-gray-100 to-gray-200 dark:from-gray-800 dark:via-gray-900 dark:to-black dark:text-white duration-200 relative z-40">
       <div className="container mx-auto py-4 px-4 md:px-8 flex justify-between items-center">
         {/* Logo Section */}
         <div className="flex items-center">
-          <Link to="/" className="text-2xl sm:text-3xl flex items-center gap-2">
-            <img src={Logo} alt="Logo" className="w-10 h-10 object-cover rounded-full" />
-            <span className="font-bold text-yellow-500">Second Chance</span>Store
+          <Link to="/" className="text-2xl sm:text-3xl flex items-center gap-2 font-bold">
+            <img src={Logo} alt="Logo" className="w-12 h-12 object-cover rounded-full shadow-md" />
+            <span className="text-yellow-500">Second Chance</span>
+            <span className="text-gray-800 dark:text-gray-300">Store</span>
           </Link>
         </div>
 
@@ -44,10 +44,10 @@ const Navbar = ({ handleOrderPopup }) => {
           <DarkMode />
           <button
             onClick={handleOrderPopup}
-            className="relative p-2 rounded-full hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:scale-105 transition duration-200"
+            className="relative p-2 rounded-full hover:scale-105 bg-gradient-to-r from-primary to-secondary shadow-md transition-transform duration-200"
           >
-            <FaCartShopping className="text-2xl text-black dark:text-white drop-shadow-sm cursor-pointer" />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs px-1">3</span>
+            <FaCartShopping className="text-2xl text-black dark:text-white" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs px-1 shadow-sm">3</span>
           </button>
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-2xl">
             <FaBars />
@@ -58,15 +58,15 @@ const Navbar = ({ handleOrderPopup }) => {
         <ul
           className={`${
             isMenuOpen ? "block" : "hidden"
-          } md:flex md:items-center gap-6 absolute md:relative top-full left-0 md:top-0 md:left-auto w-full md:w-auto bg-white dark:bg-gray-800 md:bg-transparent dark:md:bg-transparent p-4 md:p-0`}
+          } md:flex md:items-center gap-6 absolute md:relative top-full left-0 md:top-0 md:left-auto w-full md:w-auto bg-gray-100 dark:bg-gray-900 p-4 md:p-0`}
         >
           {Menu.map((menu) => (
             <li key={menu.id} className="text-center md:text-left">
               <Link
                 to={menu.link}
-                className={`flex items-center py-2 px-3 rounded-lg transition duration-200 ${
+                className={`flex items-center py-2 px-3 rounded-lg transition-transform duration-200 ${
                   location.pathname === menu.link
-                    ? "bg-gradient-to-r from-primary to-secondary text-white font-bold"
+                    ? "bg-gradient-to-r from-primary to-secondary text-white font-bold shadow-md transform scale-105"
                     : "hover:bg-gray-200 dark:hover:bg-gray-700"
                 }`}
               >
@@ -74,7 +74,6 @@ const Navbar = ({ handleOrderPopup }) => {
                   {menu.name === "Home" && <MdHomeFilled />}
                   {menu.name === "Mobile" && <HiOutlineDevicePhoneMobile />}
                   {menu.name === "Blog" && <FaLaptop />}
-                  {menu.name === "Television" && <FaTv />}
                 </span>
                 {menu.name}
               </Link>
@@ -106,10 +105,10 @@ const Navbar = ({ handleOrderPopup }) => {
           <DarkMode />
           <button
             onClick={handleOrderPopup}
-            className="relative p-2 rounded-full hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:scale-105 transition duration-200"
+            className="relative p-2 rounded-full hover:scale-105 bg-gradient-to-r from-primary to-secondary shadow-md transition-transform duration-200"
           >
-            <FaCartShopping className="text-2xl text-black dark:text-white drop-shadow-sm cursor-pointer" />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs px-1">3</span>
+            <FaCartShopping className="text-2xl text-black dark:text-white" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs px-1 shadow-sm">3</span>
           </button>
         </div>
       </div>

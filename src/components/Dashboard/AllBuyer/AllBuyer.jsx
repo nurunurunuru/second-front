@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState, } from 'react';
-import { Toaster } from 'react-hot-toast';
-import { ToastContainer } from 'react-toastify';
+import React, { useContext, useEffect, useState } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
 import { AuthContext } from '../../../Contexts/AuthProvider';
 
 const AllBuyer = () => {
-  const { user } = useContext(AuthContext); // Get user info from context
+  const { user } = useContext(AuthContext);
   const [buyers, setBuyers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [buyerToDelete, setBuyerToDelete] = useState(null);
 
+  // Fetch buyers on component mount
   useEffect(() => {
     fetch('http://localhost:7000/users?userType=buyer')
       .then((response) => response.json())
@@ -16,11 +16,7 @@ const AllBuyer = () => {
       .catch((error) => console.error("Error fetching buyers:", error));
   }, []);
 
-  const handleDelete = (buyerEmail) => {
-    setBuyerToDelete(buyerEmail);
-    setIsModalOpen(true);
-  };
-
+  // Delete buyer and associated bookings
   const confirmDelete = () => {
     fetch(`http://localhost:7000/users/${buyerToDelete}`, { method: 'DELETE' })
       .then((response) => response.json())
@@ -29,17 +25,17 @@ const AllBuyer = () => {
         setIsModalOpen(false);
         toast.success("Buyer and associated bookings deleted successfully");
       })
-      .catch((error) => console.error("Error deleting buyer:", error));
-      toast.error("Failed to delete buyer");
+      .catch(() => toast.error("Failed to delete buyer"));
   };
 
+  // Toggle buyer role
   const handleToggleBuyerRole = (email, currentRole) => {
     const newRole = currentRole === 'buyer' ? 'not_buyer' : 'buyer';
 
     fetch(`http://localhost:7000/users/buyer/${email}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role: newRole })
+      body: JSON.stringify({ role: newRole }),
     })
       .then((res) => res.json())
       .then(() => {
@@ -48,16 +44,16 @@ const AllBuyer = () => {
             buyer.email === email ? { ...buyer, role: newRole } : buyer
           )
         );
+        toast.success("Role updated successfully");
       })
-      .catch((error) => console.error("Error updating buyer role:", error));
+      .catch(() => toast.error("Failed to update role"));
   };
 
   return (
-    <div className="my-10 px-6 min-h-screen ">
+    <div className="my-10 px-6 min-h-screen">
       <Toaster />
       <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">All Buyers</h2>
-      
-      {/* Show logged-in user info */}
+
       {user && (
         <div className="mb-6 text-center">
           <h3 className="text-xl font-semibold">Logged In User:</h3>
@@ -66,8 +62,8 @@ const AllBuyer = () => {
       )}
 
       {buyers.length > 0 ? (
-        <div className="overflow-y-auto h-[500px] border rounded-lg shadow-lg relative max-h-80 ">
-          <table className="min-w-full bg-white ">
+        <div className="overflow-y-auto h-[500px] border rounded-lg shadow-lg relative">
+          <table className="min-w-full bg-white">
             <thead className="sticky top-0 bg-teal-600 text-white">
               <tr>
                 <th className="p-3 border-b-2 text-left">Serial</th>
@@ -92,7 +88,13 @@ const AllBuyer = () => {
                     </button>
                   </td>
                   <td className="p-3 border-b text-center">
-                    <button onClick={() => handleDelete(buyer.email)} className="bg-red-500 text-white py-1 px-2 rounded">
+                    <button
+                      onClick={() => {
+                        setBuyerToDelete(buyer.email);
+                        setIsModalOpen(true);
+                      }}
+                      className="bg-red-500 text-white py-1 px-2 rounded"
+                    >
                       Delete
                     </button>
                   </td>
@@ -106,14 +108,22 @@ const AllBuyer = () => {
       )}
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center overflow-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full">
-            <h3 className="text-lg font-semibold mb-4">Are you sure you want to delete this buyer?</h3>
+            <h3 className="text-lg font-semibold mb-4">
+              Are you sure you want to delete this buyer?
+            </h3>
             <div className="flex justify-end space-x-4">
-              <button onClick={confirmDelete} className="bg-red-600 text-white py-1 px-4 rounded">
+              <button
+                onClick={confirmDelete}
+                className="bg-red-600 text-white py-1 px-4 rounded"
+              >
                 Confirm
               </button>
-              <button onClick={() => setIsModalOpen(false)} className="bg-gray-300 py-1 px-4 rounded">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-gray-300 py-1 px-4 rounded"
+              >
                 Cancel
               </button>
             </div>
